@@ -1,20 +1,29 @@
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Snake extends KeyAdapter{
 
 	private Sprite player;
 	private Food food;
 	
+	private AI ai;
+	
 	private static final int ROW=30;
 	private static final int COL=50;
 	
-	private static final int WAIT_LIMIT=115;
+	private static final int WAIT_LIMIT=90;
 	
 	private int wait;
 	
 	private Display d;
+	
+	private boolean rightPressed,leftPressed,downPressed,upPressed=false;
+	
+	private boolean doAI;
+
 	
 	public static void main(String[] args) {
 
@@ -24,8 +33,11 @@ public class Snake extends KeyAdapter{
 	
 
 	public Snake(){
+		
+		doAI=true;
+		
 	    d=new Display(COL,ROW);
-
+	    
 		d.getFrame().addKeyListener(this);
 		
 		food=new Food();
@@ -33,24 +45,34 @@ public class Snake extends KeyAdapter{
 		player = new Sprite(food,d);
 		d.displayPlayer(player);
 		d.displayFood(food);
-		wait=WAIT_LIMIT;		
+		wait=WAIT_LIMIT;	
+		
+	
+	
+		ai=new DeterministicAI(d, player, food);
 
 		new Thread(new Runnable(){
 			public void run(){
 
 				while(!player.isLost()){
 
-					//System.out.println(player.checkLost());
-
+					
+					
 					d.repaint();
 					d.displayPlayer(player);
 					player.move();
 					
 					player.eatFood();
+					
+					if(doAI)
+						ai.changeDirection();
+					
+					
 
 					try{ Thread.sleep(wait); } catch(InterruptedException e){}
 				}
-				
+				System.out.println(player.getBearing());
+				ai.print();
 				d.endGame();
 				
 			}
@@ -89,11 +111,23 @@ public class Snake extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
 
-			if(e.getKeyCode()==KeyEvent.VK_RIGHT) player.setBearing(Location.EAST);
-			else if(e.getKeyCode()==KeyEvent.VK_LEFT) player.setBearing(Location.WEST);
-			else if(e.getKeyCode()==KeyEvent.VK_UP) player.setBearing(Location.NORTH);
-			else if(e.getKeyCode()==KeyEvent.VK_DOWN) player.setBearing(Location.SOUTH);
-			try{ Thread.sleep(50); } catch(InterruptedException ie){}
+			if(!rightPressed&&e.getKeyCode()==KeyEvent.VK_RIGHT){
+				player.setBearing(Location.EAST);
+				rightPressed=true;
+			}
+			else if(!leftPressed&&e.getKeyCode()==KeyEvent.VK_LEFT){
+				player.setBearing(Location.WEST);
+				leftPressed=true;
+			}
+			else if(!upPressed&&e.getKeyCode()==KeyEvent.VK_UP){
+				player.setBearing(Location.NORTH);
+				upPressed=true;
+			}
+			else if(!downPressed&&e.getKeyCode()==KeyEvent.VK_DOWN){
+				player.setBearing(Location.SOUTH);
+				downPressed=true;
+			}
+			try{ Thread.sleep(20); } catch(InterruptedException ie){}
 
 			if(d.isEnd()){
 				if(e.getKeyCode()==KeyEvent.VK_SPACE){
@@ -102,6 +136,16 @@ public class Snake extends KeyAdapter{
 					
 				}
 			}
+			
+			if(e.getKeyCode()==KeyEvent.VK_Z) doAI=!doAI;
+		}
+		
+		@Override
+		public void keyReleased(KeyEvent e){
+			if(e.getKeyCode()==KeyEvent.VK_RIGHT) rightPressed=false;
+			if(e.getKeyCode()==KeyEvent.VK_LEFT) leftPressed=false;
+			if(e.getKeyCode()==KeyEvent.VK_UP) upPressed=false;
+			if(e.getKeyCode()==KeyEvent.VK_DOWN) downPressed=false;
 		}
 
 		

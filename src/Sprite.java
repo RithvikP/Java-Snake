@@ -33,7 +33,9 @@ public class Sprite {
 	    isGrowing=false;
 	    
 	    growCount=0;
+	    
 	   
+
 		bearing=Location.EAST;
 		
 		/*for(int i=0;i<100;i++){
@@ -60,6 +62,8 @@ public class Sprite {
         }).start();
 		
 	}
+	
+	public int getBearing(){ return bearing;}
 	
 	public void move(){
 		
@@ -127,11 +131,13 @@ public class Sprite {
 				else if(isValid(new Location(loc.get(loc.size()-1).getRow()-1,loc.get(loc.size()-1).getCol())))
 					loc.add(new Location(loc.get(loc.size()-1).getRow()-1,loc.get(loc.size()-1).getCol()));
 				
+				else if(isValid(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()-1)))
+					loc.add(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()-1));
+				
 				else if(isValid(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()+1)))
 					loc.add(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()+1));
 				
-				else if(isValid(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()-1)))
-					loc.add(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()-1));
+				
 			}
 			else{
 				if(isValid(new Location(loc.get(loc.size()-1).getRow(),loc.get(loc.size()-1).getCol()+1)))
@@ -172,4 +178,14 @@ public class Sprite {
 	{
 		return loc;
 	}
-}
+	
+	public List<Location> getFullLocs(){
+		List<Location> locs=new ArrayList<Location>();
+		
+		for(int i=0;i<loc.size();i++){
+			locs.add(new Location(loc.get(i).getCol(),loc.get(i).getRow()));
+		}
+		
+		return locs;
+	}
+ }

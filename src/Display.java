@@ -35,12 +35,12 @@ public class Display extends JComponent{
 	private boolean end;
 	
 	
-	private ArrayList<Color> colors;
-	private ArrayList<Location> locs2;
+	private List<Color> colors;
+	private List<Location> locs2;
 	
 	public Display(int c, int r){
-		height=(r)*BLOCK_SIZE+r*SPACER/2+BLOCK_SIZE-SPACER/2-SPACER;
-		width=(c-1)*BLOCK_SIZE+c*SPACER/2;
+		height=(r)*BLOCK_SIZE+r*(SPACER/2)+BLOCK_SIZE-SPACER/2-SPACER;
+		width=(c)*BLOCK_SIZE+c*SPACER/2;
 		rows=r;
 		cols=c;
 		init();
@@ -54,6 +54,7 @@ public class Display extends JComponent{
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(width,height);
+        
         frame.getContentPane().setBackground(BACKGROUND);
         frame.getContentPane().add(this);
         
@@ -76,15 +77,16 @@ public class Display extends JComponent{
 					
 					if(locs.contains(new Location(i,j))){
 						g.setColor(SNAKE_COLOR);
-						g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE,BLOCK_SIZE-SPACER, BLOCK_SIZE-SPACER);
+						g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE,BLOCK_SIZE/*-SPACER*/, BLOCK_SIZE/*-SPACER*/);
 						
 					}
 					else{
 						g.setColor(BACKGROUND);
-						g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE,BLOCK_SIZE-SPACER, BLOCK_SIZE-SPACER);
+						g.fillRect(j*BLOCK_SIZE, i*BLOCK_SIZE,BLOCK_SIZE/*-SPACER*/, BLOCK_SIZE/*-SPACER*/);
 					}
 				}
 			}
+			
 			
 			if(food.isVisible()){
 				g.setColor(FOOD);
@@ -92,6 +94,7 @@ public class Display extends JComponent{
 						food.getLocation().getRow()*BLOCK_SIZE, BLOCK_SIZE-SPACER,
 							BLOCK_SIZE-SPACER);
 			}
+			
 		}
 		else{
 	
@@ -103,15 +106,15 @@ public class Display extends JComponent{
 				}
 				
 				
-				for(int i=0;i<locs2.size();i++){
+				for(int i=0;i<locs2.size()-1;i++){
 					g.setColor(colors.get(i));
 					g.fillRect(locs.get(i).getCol()*BLOCK_SIZE, 
-							locs.get(i).getRow()*BLOCK_SIZE,BLOCK_SIZE-SPACER, BLOCK_SIZE-SPACER);
+							locs.get(i).getRow()*BLOCK_SIZE,BLOCK_SIZE/*-SPACER*/, BLOCK_SIZE/*-SPACER*/);
 				}
 				for(int i=locs2.size();i<locs.size();i++){
 					g.setColor(SNAKE_COLOR);
 					g.fillRect(locs.get(i).getCol()*BLOCK_SIZE, 
-							locs.get(i).getRow()*BLOCK_SIZE,BLOCK_SIZE-SPACER, BLOCK_SIZE-SPACER);
+							locs.get(i).getRow()*BLOCK_SIZE,BLOCK_SIZE/*-SPACER*/, BLOCK_SIZE/*-SPACER*/);
 				}
 				
 				
